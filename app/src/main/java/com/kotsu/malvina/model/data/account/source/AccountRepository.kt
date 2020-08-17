@@ -9,7 +9,7 @@ import io.reactivex.Single
 import java.lang.UnsupportedOperationException
 
 
-class AccountRepository private constructor(
+class AccountRepository constructor(
     private val localDataSource: AccountDataSource,
     private val remoteDataSource: AccountDataSource
 ) : AccountDataSource {
@@ -94,22 +94,5 @@ class AccountRepository private constructor(
 
     override fun saveAccount(account: Account) {
         throw UnsupportedOperationException()
-    }
-
-    companion object {
-
-        private var INSTANCE: AccountRepository? = null
-
-        @JvmStatic
-        fun getInstance(
-            localDataSource: AccountDataSource,
-            remoteDataSource: AccountDataSource
-        ) =
-            INSTANCE ?: synchronized(AccountRepository::class.java) {
-                INSTANCE ?: AccountRepository(localDataSource, remoteDataSource)
-                    .also {
-                        INSTANCE = it
-                    }
-            }
     }
 }

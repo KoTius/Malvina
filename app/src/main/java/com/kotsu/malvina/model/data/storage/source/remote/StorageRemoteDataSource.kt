@@ -11,7 +11,7 @@ import io.reactivex.Single
 import java.io.IOException
 
 
-class StorageRemoteDataSource private constructor(
+class StorageRemoteDataSource(
     private val apiService: StubApiService
 ) : StorageDataSource {
 
@@ -40,22 +40,6 @@ class StorageRemoteDataSource private constructor(
                 } else {
                     Single.error(IOException("Server responded with a error loading storage data"))
                 }
-            }
-    }
-
-    companion object {
-
-        private var INSTANCE: StorageRemoteDataSource? = null
-
-        @JvmStatic
-        fun getInstance(
-            apiService: StubApiService
-        ) =
-            INSTANCE ?: synchronized(StorageRemoteDataSource::class.java) {
-                INSTANCE ?: StorageRemoteDataSource(apiService)
-                    .also {
-                        INSTANCE = it
-                    }
             }
     }
 }

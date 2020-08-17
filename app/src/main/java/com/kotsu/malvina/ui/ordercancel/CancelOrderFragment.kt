@@ -5,19 +5,20 @@ import android.text.InputType
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.kotsu.malvina.R
 import com.kotsu.malvina.databinding.CancelOrderFragBinding
-import com.kotsu.malvina.injection.InjectionUtils
 import com.kotsu.malvina.ui.BaseFragment
 import com.kotsu.malvina.util.Utils
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class CancelOrderFragment : BaseFragment() {
 
-    private lateinit var viewModel: CancelOrderViewModel
+    private val viewModel: CancelOrderViewModel by viewModels()
     private lateinit var viewDataBinding: CancelOrderFragBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +28,9 @@ class CancelOrderFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val orderId = CancelOrderFragmentArgs.fromBundle(arguments!!).orderId
+        val orderId = CancelOrderFragmentArgs.fromBundle(requireArguments()).orderId
 
-        val factory = InjectionUtils.provideCancelOrderViewModelFactory(requireContext().applicationContext, orderId)
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(CancelOrderViewModel::class.java)
+        viewModel.start(orderId)
 
         viewDataBinding = CancelOrderFragBinding.inflate(inflater, container, false)
             .apply {
@@ -70,15 +69,15 @@ class CancelOrderFragment : BaseFragment() {
 
     private fun subscribeUI() {
 
-        viewModel.manualLoginRequired.observe(this, Observer {
+        viewModel.manualLoginRequired.observe(viewLifecycleOwner, Observer {
             navigateToLoginScreen()
         })
 
-        viewModel.popUpToOrdersScreen.observe(this, Observer {
+        viewModel.popUpToOrdersScreen.observe(viewLifecycleOwner, Observer {
             popToOrdersFragment()
         })
 
-        viewModel.showMessage.observe(this, Observer {
+        viewModel.showMessage.observe(viewLifecycleOwner, Observer {
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         })
     }

@@ -1,5 +1,6 @@
 package com.kotsu.malvina.ui.ordercomplete
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,11 +14,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class CompleteOrderViewModel(
-    private val orderId: Int,
+class CompleteOrderViewModel @ViewModelInject constructor(
     private val getOrder: GetOrder,
     private val completeOrder: CompleteOrder
-    ) : ViewModel() {
+) : ViewModel() {
+
+    private var _orderId: Int = 0
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -53,16 +55,23 @@ class CompleteOrderViewModel(
     val isOrderCompleted: LiveData<Boolean>
         get() = _isOrderCompleted
 
-    private var isOrderCompletionInProgress = false
+    private var _isOrderCompletionInProgress = false
 
     private val compositeDisposable = CompositeDisposable()
 
-    init {
-        loadOrderDetail()
-    }
-
     override fun onCleared() {
         compositeDisposable.dispose()
+    }
+
+    fun start(orderId: Int) {
+
+        if (_isLoading.value == true || _orderId == orderId) {
+            return
+        }
+
+        _orderId = orderId
+
+        loadOrderDetail()
     }
 
     fun retry() {
@@ -72,18 +81,18 @@ class CompleteOrderViewModel(
 
     fun completeOrder() {
 
-        if (isOrderCompletionInProgress) {
+        if (_isOrderCompletionInProgress) {
             _showMessage.value = R.string.in_progress
             return
         }
 
         _showProgressBar.value = true
-        isOrderCompletionInProgress = true
+        _isOrderCompletionInProgress = true
 
-        val disposable = completeOrder.run(orderId)
+        val disposable = completeOrder.run(_orderId)
             .doAfterTerminate {
                 _showProgressBar.value = false
-                isOrderCompletionInProgress = false
+                _isOrderCompletionInProgress = false
             }
             .subscribeBy (
                 onComplete = {
@@ -106,6 +115,7 @@ class CompleteOrderViewModel(
     }
 
     fun onBackPressed(): Boolean {
+
         if (_isOrderCompleted.value == true) {
             _popUpToOrdersScreen.call()
             return true
@@ -119,7 +129,7 @@ class CompleteOrderViewModel(
         _isLoading.value = true
         _isLoadingError.value = false
 
-        val disposable = getOrder.run(orderId)
+        val disposable = getOrder.run(_orderId)
             .subscribeBy(
                 onSuccess = {
                     _isLoading.value = false

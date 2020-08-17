@@ -86,12 +86,19 @@ object RestResponseGenerator {
         return apiOrderProducts
     }
 
-    //
-//    fun completeOrder(orderId: Int): String {
-//    }
-//
-//    fun cancelOrder(orderId: Int, commentary: String): Single<CancelOrderResponse> {
-//    }
+
+    fun completeOrder(orderId: Int): CompleteOrderResponse {
+
+        return CompleteOrderResponse(
+            CompleteOrderResponse.Data(orderId, 0)
+        ).apply {
+            isSuccess = true
+        }
+    }
+
+    fun cancelOrder(orderId: Int, commentary: String): CancelOrderResponse {
+        return CancelOrderResponse(CancelOrderResponse.Data(orderId, 0))
+    }
 
     fun updateCommentaryToOrder(orderId: Int, commentary: String): BaseResponse {
         throwIfMainThread()

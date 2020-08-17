@@ -9,16 +9,24 @@ import io.reactivex.Single
 import java.lang.UnsupportedOperationException
 
 /**
- * Manages local (as room) and remote (as rest api) data sources
+ * Manages local (as room 'not implemented yet') and remote (as rest api) data sources
  */
-class OrdersRepository private constructor(
+class OrdersRepository(
     private val localDataSource: OrdersDataSource,
     private val remoteDataSource: OrdersDataSource
 ) : OrdersDataSource {
 
-    private var cachedOrders: ArrayList<Order> = arrayListOf()
+    // This is temporary until local data source is not implemented.
+    // TODO: remove this after local data source implementation. Room should be the only data source
+    private var cachedOrders: ArrayList<Order>? = null
 
     override fun getOrders(): Flowable<List<Order>> {
+
+        if (cachedOrders != null) {
+            return Flowable.just(cachedOrders)
+        }
+
+        // TODO: Return flowable with orders from local (room)
         return getAndSaveRemoteOrders()
             .onErrorResumeNext { throwable: Throwable ->
                 if (throwable !is ManualLoginRequiredException) {
@@ -34,8 +42,13 @@ class OrdersRepository private constructor(
     private fun getAndSaveRemoteOrders(): Flowable<List<Order>> {
         return remoteDataSource.getOrders()
             .doOnNext {
-                cachedOrders.clear()
-                cachedOrders.addAll(it)
+                if (cachedOrders == null) {
+                    cachedOrders = arrayListOf()
+                } else {
+                    cachedOrders?.clear()
+                }
+
+                cachedOrders?.addAll(it)
 
                 localDataSource.saveOrders(it)
             }
@@ -50,7 +63,7 @@ class OrdersRepository private constructor(
     }
 
     override fun getOrder(orderId: Int): Single<Order> {
-        val cachedOrder = cachedOrders.find {
+        val cachedOrder = cachedOrders?.find {
             it.id == orderId
         }
 
@@ -91,29 +104,29 @@ class OrdersRepository private constructor(
 
     private fun updateLocalOrderCanceled(orderId: Int, commentary: String): Completable {
 
-        val canceledOrder = cachedOrders.find {
+        val canceledOrder = cachedOrders?.find {
             it.id == orderId
         }
 
-        cachedOrders.remove(canceledOrder)
+        cachedOrders?.remove(canceledOrder)
 
         return localDataSource.cancelOrder(orderId, commentary)
     }
 
     private fun updateLocalOrderCompleted(orderId: Int): Completable {
 
-        val completedOrder = cachedOrders.find {
+        val completedOrder = cachedOrders?.find {
             it.id == orderId
         }
 
-        cachedOrders.remove(completedOrder)
+        cachedOrders?.remove(completedOrder)
 
         return localDataSource.completeOrder(orderId)
     }
 
     private fun updateLocalOrderCommentary(orderId: Int, commentary: String): Completable {
 
-        val cachedOrder = cachedOrders.find {
+        val cachedOrder = cachedOrders?.find {
             it.id == orderId
         }
 
@@ -124,7 +137,7 @@ class OrdersRepository private constructor(
 
     private fun updateLocalOrderAddress(orderId: Int, address: String): Completable {
 
-        val cachedOrder = cachedOrders.find {
+        val cachedOrder = cachedOrders?.find {
             it.id == orderId
         }
 
@@ -135,22 +148,5 @@ class OrdersRepository private constructor(
 
     private fun log(text: String) {
         Utils.log("OrdersRepository -> $text")
-    }
-
-    companion object {
-
-        private var INSTANCE: OrdersRepository? = null
-
-        @JvmStatic
-        fun getInstance(
-            localDataSource: OrdersDataSource,
-            remoteDataSource: OrdersDataSource
-        ) =
-            INSTANCE ?: synchronized(OrdersRepository::class.java) {
-                INSTANCE ?: OrdersRepository(localDataSource, remoteDataSource)
-                    .also {
-                        INSTANCE = it
-                    }
-            }
     }
 }

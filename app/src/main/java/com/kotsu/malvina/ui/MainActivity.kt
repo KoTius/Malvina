@@ -1,37 +1,34 @@
 package com.kotsu.malvina.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.kotsu.malvina.R
 import com.kotsu.malvina.databinding.MainActBinding
-import com.kotsu.malvina.injection.InjectionUtils
 import com.kotsu.malvina.util.Utils
 import com.kotsu.malvina.util.setupWithNavController
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
  * Hosts bottom navigation with Nav controllers for Orders and Storage graphs
  */
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var viewDataBinding: MainActBinding
 
     private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val factory = InjectionUtils.provideMainViewModelFactory()
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(MainViewModel::class.java)
 
         viewDataBinding = DataBindingUtil.setContentView(this, R.layout.main_act)
 
