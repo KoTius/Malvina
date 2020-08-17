@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_graph"
+    app:startDestination="@id/login_frag">
+
+    <fragment
+        android:id="@+id/login_frag"
+        android:name="com.kotsu.malvina.ui.login.LoginFragment"
+        tools:layout="@layout/login_frag">
+
+        <action
+            android:id="@+id/action_to_registration_frag"
+            app:destination="@id/registration_frag"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/registration_frag"
+        android:name="com.kotsu.malvina.ui.registration.RegistrationFragment"
+        tools:layout="@layout/registration_frag">
+
+    </fragment>
+
+</navigation>

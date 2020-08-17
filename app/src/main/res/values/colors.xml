@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/bluePrimary</color>
+    <color name="colorPrimaryDark">@color/blueDarkPrimary</color>
+    <color name="colorAccent">@color/green</color>
+    <color name="colorToolbarTitleText">@color/white</color>
+    <color name="colorBackground">@color/grayBackground</color>
+
+    <color name="bluePrimary">#1976d2</color>
+    <color name="blueDarkPrimary">#004ba0</color>
+    <color name="blueLightPrimary">#63a4ff</color>
+    <color name="redLight">#FF6464</color>
+
+    <color name="grayBackground">#F0EFF5</color>
+    <color name="gray300">#E0E0E0</color>
+    <color name="gray350">#cccccc</color>
+    <color name="gray550">#808080</color>
+
+    <color name="white">@android:color/white</color>
+    <color name="green">@android:color/holo_green_dark</color>
+
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--checked-->
+    <item android:color="?attr/colorAccent" android:state_checked="true"/>
+    <!--disabled-->
+    <item android:color="?attr/colorPrimary" android:state_enabled="false"/>
+    <!--general-->
+    <item android:color="?attr/colorPrimary"/>
+</selector>

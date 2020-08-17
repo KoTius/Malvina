@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="com.kotsu.malvina.ui.storage.classes.StorageProduct" />
+
+        <variable
+            name="clickHandler"
+            type="com.kotsu.malvina.ui.adapters.StorageProductsAdapter.ClickHandler" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/product_card"
+        android:layout_width="match_parent"
+        android:layout_height="288dp"
+        android:onClick="@{clickHandler::onProductCardClick}"
+        app:cardCornerRadius="4dp"
+        tools:layout_width="216dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/product_item_image"
+                android:layout_width="0dp"
+                android:layout_height="104dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@null"
+                android:scaleType="fitCenter"
+                app:imageFromUrl="@{product.imageUrl}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:padding="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/product_item_image">
+
+                <TextView
+                    android:id="@+id/product_item_title"
+                    style="@style/TextTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="3"
+                    android:text="@{product.name}"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Product name" />
+
+                <TextView
+                    android:id="@+id/product_count_available"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/product_count_hold"
+                    android:text="@{@string/count_available(product.countAvailable)}"
+                    tools:text="Available:5" />
+
+                <TextView
+                    android:id="@+id/product_count_hold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toStartOf="@id/product_count_available"
+                    app:layout_constraintBottom_toTopOf="@id/product_count_total"
+                    android:text="@{@string/count_hold(product.countHold)}"
+                    tools:text="Hold by orders:5" />
+
+                <TextView
+                    android:id="@+id/product_count_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="10sp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintStart_toStartOf="@id/product_count_available"
+                    app:layout_constraintBottom_toTopOf="@id/product_item_price"
+                    android:text="@{@string/count_total(product.countAvailable + product.countHold)}"
+                    tools:text="Total:10" />
+
+                <TextView
+                    android:id="@+id/product_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    setProductPrice="@{product.price}"
+                    tools:text="$87.00" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>

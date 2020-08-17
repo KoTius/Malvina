@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/orders_nav_graph"
+    app:startDestination="@id/orders_frag">
+
+    <fragment
+        android:id="@+id/orders_frag"
+        android:name="com.kotsu.malvina.ui.orders.OrdersFragment"
+        android:label="@string/orders"
+        tools:layout="@layout/orders_frag">
+
+        <action
+            android:id="@+id/action_to_order_detail_frag"
+            app:destination="@id/order_detail_frag" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/order_detail_frag"
+        android:name="com.kotsu.malvina.ui.orderdetail.OrderDetailFragment"
+        android:label="@string/order_detail"
+        tools:layout="@layout/order_detail_frag">
+
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_to_finish_order_frag"
+            app:destination="@id/finish_order_frag" />
+
+        <action
+            android:id="@+id/action_to_cancel_order_frag"
+            app:destination="@id/cancel_order_frag"/>
+
+        <action
+            android:id="@+id/action_to_add_commentary_frag"
+            app:destination="@id/add_commentary_frag"/>
+
+        <action
+            android:id="@+id/action_to_add_address_frag"
+            app:destination="@id/add_address_frag"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/cancel_order_frag"
+        android:name="com.kotsu.malvina.ui.ordercancel.CancelOrderFragment"
+        android:label="@string/cancel_order"
+        tools:layout="@layout/cancel_order_frag">
+
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_commentary_frag"
+        android:name="com.kotsu.malvina.ui.addcommentary.AddCommentaryFragment"
+        android:label="@string/commentary"
+        tools:layout="@layout/add_commentary_frag">
+
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+
+        <argument
+            android:name="commentary"
+            app:argType="string"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_address_frag"
+        android:name="com.kotsu.malvina.ui.addaddress.AddAddressFragment"
+        android:label="@string/address"
+        tools:layout="@layout/add_address_frag">
+
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+
+        <argument
+            android:name="address"
+            app:argType="string"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/finish_order_frag"
+        android:name="com.kotsu.malvina.ui.ordercomplete.CompleteOrderFragment"
+        android:label="@string/finishing_order"
+        tools:layout="@layout/complete_order_frag">
+
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+
+    </fragment>
+
+    <activity
+        android:id="@+id/login_activity"
+        android:name="com.kotsu.malvina.ui.LoginActivity"
+        tools:layout="@layout/login_act" />
+
+    <action
+        android:id="@+id/action_global_to_login_screen"
+        app:destination="@id/login_activity" />
+
+</navigation>
