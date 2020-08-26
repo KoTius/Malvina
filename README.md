@@ -2,7 +2,7 @@
 
 Sandbox app used for learning new android stuff
 
-Apps show list of items, item detail screen and few item edit screens represented as fragments
+App shows a list of items, an item detail screen and few item edit screens represented as fragments
 
 Hilt
 
