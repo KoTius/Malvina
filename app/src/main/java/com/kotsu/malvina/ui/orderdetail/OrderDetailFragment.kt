@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class OrderDetailFragment : BaseFragment() {
 
     private val viewModel: OrderDetailViewModel by viewModels()
-    private lateinit var viewDataBinding: OrderDetailFragBinding
+    private var viewDataBinding: OrderDetailFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class OrderDetailFragment : BaseFragment() {
 
         viewModel.start(orderId)
 
-        viewDataBinding = OrderDetailFragBinding.inflate(inflater, container, false)
+        val binding = OrderDetailFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@OrderDetailFragment.viewModel
                 lifecycleOwner = this@OrderDetailFragment
@@ -53,9 +53,16 @@ class OrderDetailFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

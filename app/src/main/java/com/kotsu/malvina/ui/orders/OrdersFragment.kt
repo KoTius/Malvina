@@ -25,12 +25,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class OrdersFragment : BaseFragment() {
 
     private val viewModel: OrdersViewModel by viewModels()
-
-    private lateinit var viewDataBinding: OrdersFragBinding
+    private var viewDataBinding: OrdersFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        viewDataBinding = OrdersFragBinding.inflate(inflater, container, false)
+        val binding = OrdersFragBinding.inflate(inflater, container, false)
             .apply {
                 this.viewModel = this@OrdersFragment.viewModel
                 lifecycleOwner = this@OrdersFragment
@@ -53,9 +52,16 @@ class OrdersFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onResume() {
@@ -66,7 +72,7 @@ class OrdersFragment : BaseFragment() {
     private fun subscribeUI() {
 
         viewModel.showLoading.observe(viewLifecycleOwner, Observer {
-            viewDataBinding.refreshLayout.isRefreshing = it
+            viewDataBinding!!.refreshLayout.isRefreshing = it
         })
 
         viewModel.showLoadingError.observe(viewLifecycleOwner, Observer {

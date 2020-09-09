@@ -19,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CancelOrderFragment : BaseFragment() {
 
     private val viewModel: CancelOrderViewModel by viewModels()
-    private lateinit var viewDataBinding: CancelOrderFragBinding
+    private var viewDataBinding: CancelOrderFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class CancelOrderFragment : BaseFragment() {
 
         viewModel.start(orderId)
 
-        viewDataBinding = CancelOrderFragBinding.inflate(inflater, container, false)
+        val binding = CancelOrderFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@CancelOrderFragment.viewModel
                 lifecycleOwner = this@CancelOrderFragment
@@ -49,9 +49,16 @@ class CancelOrderFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -87,8 +94,10 @@ class CancelOrderFragment : BaseFragment() {
     }
 
     private fun confirmCancellation() {
-        Utils.hideKeyboard(viewDataBinding.commentaryInput)
-        val commentary = viewDataBinding.commentaryInput.text.toString()
-        viewModel.cancelOrder(commentary)
+        viewDataBinding?.let { binding ->
+            Utils.hideKeyboard(binding.commentaryInput)
+            val commentary = binding.commentaryInput.text.toString()
+            viewModel.cancelOrder(commentary)
+        }
     }
 }

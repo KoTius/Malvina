@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CompleteOrderFragment : BaseFragment() {
 
     private val viewModel: CompleteOrderViewModel by viewModels()
-    private lateinit var viewDataBinding: CompleteOrderFragBinding
+    private var viewDataBinding: CompleteOrderFragBinding? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,7 +44,7 @@ class CompleteOrderFragment : BaseFragment() {
 
         viewModel.start(orderId)
 
-        viewDataBinding = CompleteOrderFragBinding.inflate(inflater, container, false)
+        val binding = CompleteOrderFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@CompleteOrderFragment.viewModel
                 lifecycleOwner = this@CompleteOrderFragment
@@ -57,9 +57,16 @@ class CompleteOrderFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     private fun subscribeUI() {

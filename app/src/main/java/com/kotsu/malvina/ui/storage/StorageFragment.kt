@@ -20,11 +20,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class StorageFragment : BaseFragment() {
 
     private val viewModel: StorageViewModel by viewModels()
-    private lateinit var viewDataBinding: StorageFragBinding
+    private var viewDataBinding: StorageFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        viewDataBinding = StorageFragBinding.inflate(inflater, container, false)
+        val binding = StorageFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@StorageFragment.viewModel
                 lifecycleOwner = this@StorageFragment
@@ -51,15 +51,21 @@ class StorageFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     private fun subscribeUI() {
-
         viewModel.showLoading.observe(viewLifecycleOwner, Observer {
-            viewDataBinding.refreshLayout.isRefreshing = it
+            viewDataBinding!!.refreshLayout.isRefreshing = it
         })
 
         viewModel.showLoadingError.observe(viewLifecycleOwner, Observer {
