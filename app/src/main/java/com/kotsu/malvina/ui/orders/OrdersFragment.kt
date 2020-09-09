@@ -24,7 +24,7 @@ import com.kotsu.malvina.util.Utils
 class OrdersFragment : BaseFragment() {
 
     private lateinit var viewModel: OrdersViewModel
-    private lateinit var viewDataBinding: OrdersFragBinding
+    private var viewDataBinding: OrdersFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -33,7 +33,7 @@ class OrdersFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, factory)
             .get(OrdersViewModel::class.java)
 
-        viewDataBinding = OrdersFragBinding.inflate(inflater, container, false)
+        val binding = OrdersFragBinding.inflate(inflater, container, false)
             .apply {
                 this.viewModel = this@OrdersFragment.viewModel
                 lifecycleOwner = this@OrdersFragment
@@ -56,9 +56,16 @@ class OrdersFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onResume() {
@@ -69,7 +76,7 @@ class OrdersFragment : BaseFragment() {
     private fun subscribeUI() {
 
         viewModel.showLoading.observe(this, Observer {
-            viewDataBinding.refreshLayout.isRefreshing = it
+            viewDataBinding!!.refreshLayout.isRefreshing = it
         })
 
         viewModel.showLoadingError.observe(this, Observer {

@@ -13,7 +13,7 @@ import com.kotsu.malvina.injection.InjectionUtils
 class TemplateFragment : Fragment() {
 
     private lateinit var viewModel: TemplateViewModel
-    private lateinit var viewDataBinding: TemplateFragBinding
+    private var viewDataBinding: TemplateFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -21,11 +21,18 @@ class TemplateFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory)
             .get(TemplateViewModel::class.java)
 
-        viewDataBinding = TemplateFragBinding.inflate(inflater, container, false)
+        val binding = TemplateFragBinding.inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = this@TemplateFragment
             }
 
-        return viewDataBinding.root
+        viewDataBinding = binding
+
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 }

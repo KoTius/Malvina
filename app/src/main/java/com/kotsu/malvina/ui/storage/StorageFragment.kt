@@ -19,7 +19,7 @@ import com.kotsu.malvina.ui.customview.GridSpacingItemDecoration
 class StorageFragment : BaseFragment() {
 
     private lateinit var viewModel: StorageViewModel
-    private lateinit var viewDataBinding: StorageFragBinding
+    private var viewDataBinding: StorageFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -27,7 +27,7 @@ class StorageFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, factory)
             .get(StorageViewModel::class.java)
 
-        viewDataBinding = StorageFragBinding.inflate(inflater, container, false)
+        val binding = StorageFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@StorageFragment.viewModel
                 lifecycleOwner = this@StorageFragment
@@ -54,15 +54,22 @@ class StorageFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     private fun subscribeUI() {
 
         viewModel.showLoading.observe(this, Observer {
-            viewDataBinding.refreshLayout.isRefreshing = it
+            viewDataBinding!!.refreshLayout.isRefreshing = it
         })
 
         viewModel.showLoadingError.observe(this, Observer {

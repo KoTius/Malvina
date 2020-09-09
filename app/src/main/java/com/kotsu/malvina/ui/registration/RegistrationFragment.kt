@@ -13,7 +13,7 @@ import com.kotsu.malvina.injection.InjectionUtils
 class RegistrationFragment : Fragment() {
 
     private lateinit var viewModel: RegistrationViewModel
-    private lateinit var viewDataBinding: RegistrationFragBinding
+    private var viewDataBinding: RegistrationFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -21,18 +21,25 @@ class RegistrationFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory)
             .get(RegistrationViewModel::class.java)
 
-        viewDataBinding = RegistrationFragBinding.inflate(inflater, container, false)
+        val binding = RegistrationFragBinding.inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = this@RegistrationFragment
             }
 
+        viewDataBinding = binding
+
         testNavigation()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     private fun testNavigation() {
-        viewDataBinding.toMainActBtn.setOnClickListener {
+        viewDataBinding!!.toMainActBtn.setOnClickListener {
             navigateToMain()
         }
     }

@@ -18,7 +18,7 @@ import com.kotsu.malvina.util.Utils
 class CancelOrderFragment : BaseFragment() {
 
     private lateinit var viewModel: CancelOrderViewModel
-    private lateinit var viewDataBinding: CancelOrderFragBinding
+    private var viewDataBinding: CancelOrderFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ class CancelOrderFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, factory)
             .get(CancelOrderViewModel::class.java)
 
-        viewDataBinding = CancelOrderFragBinding.inflate(inflater, container, false)
+        val binding = CancelOrderFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@CancelOrderFragment.viewModel
                 lifecycleOwner = this@CancelOrderFragment
@@ -50,9 +50,16 @@ class CancelOrderFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -88,8 +95,10 @@ class CancelOrderFragment : BaseFragment() {
     }
 
     private fun confirmCancellation() {
-        Utils.hideKeyboard(viewDataBinding.commentaryInput)
-        val commentary = viewDataBinding.commentaryInput.text.toString()
-        viewModel.cancelOrder(commentary)
+        viewDataBinding?.let { binding ->
+            Utils.hideKeyboard(binding.commentaryInput)
+            val commentary = binding.commentaryInput.text.toString()
+            viewModel.cancelOrder(commentary)
+        }
     }
 }

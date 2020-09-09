@@ -19,7 +19,7 @@ import com.kotsu.malvina.util.Utils
 class LoginFragment : Fragment() {
 
     private lateinit var viewModel: LoginViewModel
-    private lateinit var viewDataBinding: LoginFragBinding
+    private var viewDataBinding: LoginFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -27,21 +27,28 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory)
             .get(LoginViewModel::class.java)
 
-        viewDataBinding = LoginFragBinding.inflate(inflater, container, false)
+        val binding = LoginFragBinding.inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = this@LoginFragment
                 this.viewModel = this@LoginFragment.viewModel
             }
 
 
-        viewDataBinding.signIn.setOnClickListener {
+        binding.signIn.setOnClickListener {
             Utils.hideKeyboard(it)
             attemptSignIn()
         }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     private fun subscribeUI() {
@@ -57,8 +64,8 @@ class LoginFragment : Fragment() {
 
     private fun attemptSignIn() {
 
-        val login = viewDataBinding.loginInput.text.toString()
-        val password = viewDataBinding.passwordInput.text.toString()
+        val login = viewDataBinding!!.loginInput.text.toString()
+        val password = viewDataBinding!!.passwordInput.text.toString()
 
         if (!validate(login, password)) {
             return
@@ -89,11 +96,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun showLoginInputError(errorText: String?) {
-        viewDataBinding.loginLayout.error = errorText
+        viewDataBinding!!.loginLayout.error = errorText
     }
 
     private fun showPasswordInputError(errorText: String?) {
-        viewDataBinding.passwordLayout.error = errorText
+        viewDataBinding!!.passwordLayout.error = errorText
     }
 
     private fun showToast(@StringRes resId: Int) {

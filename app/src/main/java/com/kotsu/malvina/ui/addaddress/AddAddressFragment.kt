@@ -16,7 +16,7 @@ import com.kotsu.malvina.util.Utils
 class AddAddressFragment : BaseFragment() {
 
     private lateinit var viewModel: AddAddressViewModel
-    private lateinit var viewDataBinding: AddAddressFragBinding
+    private var viewDataBinding: AddAddressFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ class AddAddressFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, factory)
             .get(AddAddressViewModel::class.java)
 
-        viewDataBinding = AddAddressFragBinding.inflate(inflater, container, false)
+        val binding = AddAddressFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@AddAddressFragment.viewModel
                 lifecycleOwner = this@AddAddressFragment
@@ -41,9 +41,16 @@ class AddAddressFragment : BaseFragment() {
                 commentaryInput.setText(address)
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -74,8 +81,10 @@ class AddAddressFragment : BaseFragment() {
     }
 
     private fun confirmAdding() {
-        Utils.hideKeyboard(viewDataBinding.commentaryInput)
-        val address = viewDataBinding.commentaryInput.text.toString()
-        viewModel.addAddress(address)
+        viewDataBinding?.let { binding ->
+            Utils.hideKeyboard(binding.commentaryInput)
+            val address = binding.commentaryInput.text.toString()
+            viewModel.addAddress(address)
+        }
     }
 }
