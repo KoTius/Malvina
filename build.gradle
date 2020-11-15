@@ -3,7 +3,7 @@
 buildscript {
 
     ext {
-        kotlinVersion = '1.3.72'
+        kotlinVersion = '1.4.10'
         appCompatVersion = '1.2.0'
         ktxActivityVersion = '1.1.0'
         constraintLayoutVersion = '2.0.0-beta6'
@@ -27,7 +27,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
