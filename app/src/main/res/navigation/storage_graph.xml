@@ -2,11 +2,17 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/storage_graph"
-    app:startDestination="@id/storage_frag">
+    app:startDestination="@id/pick_image_frag">
 
     <fragment
         android:id="@+id/storage_frag"
         android:name="com.kotsu.malvina.ui.storage.StorageFragment"
         android:label="@string/storage" />
+
+<!--    TODO: Move into some new "Sandbox" graph all such fragments not related to the Malvinas initial idea-->
+    <fragment
+        android:id="@+id/pick_image_frag"
+        android:name="com.kotsu.malvina.sandbox.pickimage.PickImageWithoutPermissionsFragment"
+        android:label="@string/sandbox" />
 
 </navigation>

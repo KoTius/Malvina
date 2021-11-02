@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        log("onCreate")
+
         val factory = InjectionUtils.provideMainViewModelFactory()
         viewModel = ViewModelProviders.of(this, factory)
             .get(MainViewModel::class.java)
@@ -38,6 +40,36 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(viewDataBinding.toolbar)
 
         setupBottomNavAndToolbar()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        log("onRestart")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        log("onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        log("onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        log("onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        log("onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        log("onDestroy")
     }
 
     private fun setupBottomNavAndToolbar() {
