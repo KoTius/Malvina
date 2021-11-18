@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Malvina</string>
     <string name="login_input_hint">Email</string>
     <string name="password">Пароль</string>
     <string name="login">Вход</string>
@@ -44,19 +44,18 @@
     <string name="add_commentary_description">Здесь Вы можете добавить или изменить комментарий о получателе заказа</string>
     <string name="add_address_description">Здесь Вы можете добавить адрес доставки заказа</string>
     <string name="confirm">Подтвердить</string>
-    <string name="orders">Orders</string>
+    <string name="orders">Заказы</string>
     <string name="order_detail">Детали заказа</string>
     <string name="finishing_order">Завершение заказа</string>
     <string name="delivery">Доставка:</string>
     <string name="to_pay">К оплате:</string>
     <string name="start_dial">Набрать номер</string>
-    <string name="storage">Storage</string>
+    <string name="storage">Склад</string>
     <string name="empty_storage">Склад пуст</string>
     <string name="order_number">Номер заказа: %1$s</string>
     <string name="elapsed_time">Пройденное время: %1$s</string>
     <string name="less_then_hour">менее часа</string>
     <string name="days">дн.</string>
     <string name="hours">ч.</string>
-    <string name="pick_image">Pick Image</string>
-    <string name="sandbox">Sandbox</string>
+    <string name="sandbox">Песочница</string>
 </resources>

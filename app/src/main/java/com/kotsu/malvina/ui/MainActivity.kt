@@ -72,8 +72,11 @@ class MainActivity : AppCompatActivity() {
         log("onDestroy")
     }
 
+    // TODO: As of 2.3.0 navigation version which is outdated
+    // There was navigation library update with back stack support included so this setupWithNavController
+    // should be removed
     private fun setupBottomNavAndToolbar() {
-        val navGraphIds = listOf(R.navigation.orders_nav_graph, R.navigation.storage_graph)
+        val navGraphIds = listOf(R.navigation.sandbox_graph, R.navigation.orders_nav_graph, R.navigation.storage_graph)
 
         val controller = viewDataBinding.mainBottomNavView.setupWithNavController(
             navGraphIds = navGraphIds,
@@ -83,8 +86,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Whenever the selected controller changes, setup the action bar.
-        controller.observe(this, Observer { navController ->
-            setupActionBar(navController)
+        controller.observe(this, {
+            setupActionBar(it)
         })
 
         currentNavController = controller
@@ -93,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupActionBar(navController: NavController) {
         invalidateOptionsMenu()
 
-        val appBarConfig = AppBarConfiguration.Builder(R.id.orders_frag, R.id.storage_frag)
+        val appBarConfig = AppBarConfiguration.Builder(R.id.sandbox_main_frag, R.id.orders_frag, R.id.storage_frag)
             .build()
 
         NavigationUI.setupWithNavController(

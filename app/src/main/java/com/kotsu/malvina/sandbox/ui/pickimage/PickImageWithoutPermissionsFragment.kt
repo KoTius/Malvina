@@ -1,4 +1,4 @@
-package com.kotsu.malvina.sandbox.pickimage
+package com.kotsu.malvina.sandbox.ui.pickimage
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.kotsu.malvina.databinding.PickImageFragBinding
+import com.kotsu.malvina.databinding.FragSandboxPickImageBinding
 import com.kotsu.malvina.ui.BaseFragment
 import com.kotsu.malvina.util.Utils
 
@@ -18,7 +18,7 @@ private const val RC_PICK_IMAGE = 1
  */
 class PickImageWithoutPermissionsFragment : BaseFragment() {
 
-    private var _binding: PickImageFragBinding? = null
+    private lateinit var binding: FragSandboxPickImageBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,15 +26,16 @@ class PickImageWithoutPermissionsFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = PickImageFragBinding.inflate(inflater, container, false)
-            .apply {
+        binding = FragSandboxPickImageBinding.inflate(inflater, container, false)
 
-                pickImageBtn.setOnClickListener {
-                    showGalleryWithoutPermissions()
-                }
-            }
+        return binding.root
+    }
 
-        return _binding!!.root
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding.pickImageBtn.setOnClickListener {
+            showGalleryWithoutPermissions()
+        }
     }
 
     private fun showGalleryWithoutPermissions() {
@@ -67,7 +68,7 @@ class PickImageWithoutPermissionsFragment : BaseFragment() {
             val bitmap = BitmapFactory.decodeByteArray(bytes!!, 0, bytes.size)
 
 //            _binding!!.selectedImageView.setImageBitmap(bitmap)
-            _binding!!.selectedImageView.setImageURI(selectedImageUri)
+            binding.selectedImageView.setImageURI(selectedImageUri)
         }
     }
 }
