@@ -1,5 +1,6 @@
 package com.kotsu.malvina.ui.addaddress
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,10 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class AddAddressViewModel(
-    private val orderId: Int,
+class AddAddressViewModel @ViewModelInject constructor(
     private val addAddress: AddAddress
 ) : ViewModel() {
+
+    private var _orderId: Int = 0
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -34,16 +36,19 @@ class AddAddressViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
-
     override fun onCleared() {
         compositeDisposable.dispose()
+    }
+
+    fun start(orderId: Int) {
+        this._orderId = orderId
     }
 
     fun addAddress(address: String) {
 
         _isLoading.value = true
 
-        val disposable = addAddress.run(orderId, address)
+        val disposable = addAddress.run(_orderId, address)
             .doAfterTerminate {
                 _isLoading.value = false
             }

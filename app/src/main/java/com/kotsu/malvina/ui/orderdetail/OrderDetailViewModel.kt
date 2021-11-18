@@ -1,5 +1,6 @@
 package com.kotsu.malvina.ui.orderdetail
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,10 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class OrderDetailViewModel(
-    private val orderId: Int,
+class OrderDetailViewModel @ViewModelInject constructor(
     private val getOrder: GetOrder
 ) : ViewModel() {
+
+    private var _orderId: Int = 0
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -62,12 +64,19 @@ class OrderDetailViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
-    init {
-        loadOrderDetail()
-    }
-
     override fun onCleared() {
         compositeDisposable.dispose()
+    }
+
+    fun start(orderId: Int) {
+
+        if (_isLoading.value == true || _orderId == orderId) {
+            return
+        }
+
+        _orderId = orderId
+
+        loadOrderDetail()
     }
 
     private fun loadOrderDetail() {
@@ -75,7 +84,7 @@ class OrderDetailViewModel(
         _isLoading.value = true
         _isLoadingError.value = false
 
-        val disposable = getOrder.run(orderId)
+        val disposable = getOrder.run(_orderId)
             .subscribeBy(
                 onSuccess = {
                     _isLoading.value = false
@@ -101,7 +110,7 @@ class OrderDetailViewModel(
     }
 
     fun orderDelivered() {
-        _showOrderCompleteScreen.value = orderId
+        _showOrderCompleteScreen.value = _orderId
     }
 
     fun copyPhoneToClipboard(): Boolean {
@@ -117,7 +126,7 @@ class OrderDetailViewModel(
     }
 
     fun onCancelOrderClicked() {
-        _showCancelOrderScreen.value = orderId
+        _showCancelOrderScreen.value = _orderId
     }
 
     fun onStartDialClicked() {

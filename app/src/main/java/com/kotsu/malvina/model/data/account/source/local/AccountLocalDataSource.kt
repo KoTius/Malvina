@@ -7,7 +7,7 @@ import com.kotsu.malvina.ui.login.domain.classes.LoginResult
 import io.reactivex.Single
 
 
-class AccountLocalDataSource private constructor(
+class AccountLocalDataSource(
     private val accountDao: AccountDao
 ) : AccountDataSource {
 
@@ -37,19 +37,5 @@ class AccountLocalDataSource private constructor(
 
     override fun logIn(login: String, password: String): LoginResult {
         throw UnsupportedOperationException()
-    }
-
-    companion object {
-
-        private var INSTANCE: AccountLocalDataSource? = null
-
-        @JvmStatic
-        fun getInstance(accountDao: AccountDao) =
-            INSTANCE ?: synchronized(AccountLocalDataSource::class.java) {
-                INSTANCE ?: AccountLocalDataSource(accountDao)
-                    .also {
-                        INSTANCE = it
-                    }
-            }
     }
 }

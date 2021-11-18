@@ -8,21 +8,23 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kotsu.malvina.R
 import com.kotsu.malvina.databinding.OrderDetailFragBinding
-import com.kotsu.malvina.injection.InjectionUtils
 import com.kotsu.malvina.ui.BaseFragment
 import com.kotsu.malvina.ui.adapters.OrdersProductsAdapter
 import com.kotsu.malvina.ui.customview.GridSpacingItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class OrderDetailFragment : BaseFragment() {
 
-    private lateinit var viewModel: OrderDetailViewModel
+    private val viewModel: OrderDetailViewModel by viewModels()
+
     private var viewDataBinding: OrderDetailFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,11 +34,9 @@ class OrderDetailFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val orderId = OrderDetailFragmentArgs.fromBundle(arguments!!).orderId
+        val orderId = OrderDetailFragmentArgs.fromBundle(requireArguments()).orderId
 
-        val factory = InjectionUtils.provideOrderDetailViewModelFactory(requireContext().applicationContext, orderId)
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(OrderDetailViewModel::class.java)
+        viewModel.start(orderId)
 
         val binding = OrderDetailFragBinding.inflate(inflater, container, false)
             .apply {
@@ -84,36 +84,36 @@ class OrderDetailFragment : BaseFragment() {
 
     private fun subscribeUI() {
 
-        viewModel.copyPhoneToClipboard.observe(this, Observer {
+        viewModel.copyPhoneToClipboard.observe(viewLifecycleOwner, Observer {
             copyToClipboard(it)
             showToastCentered(getString(R.string.phone_copied_to_clipboard))
         })
 
-        viewModel.showStartDialScreen.observe(this, Observer {
+        viewModel.showStartDialScreen.observe(viewLifecycleOwner, Observer {
             startDialIntent(it)
         })
 
-        viewModel.showNoPhoneNumberProvided.observe(this, Observer {
+        viewModel.showNoPhoneNumberProvided.observe(viewLifecycleOwner, Observer {
             showToastCentered(getString(R.string.phone_empty))
         })
 
-        viewModel.showOrderCompleteScreen.observe(this, Observer {
+        viewModel.showOrderCompleteScreen.observe(viewLifecycleOwner, Observer {
             navigateToFinishOrderScreen(it)
         })
 
-        viewModel.showCancelOrderScreen.observe(this, Observer {
+        viewModel.showCancelOrderScreen.observe(viewLifecycleOwner, Observer {
             navigateToCancelOrderScreen(it)
         })
 
-        viewModel.showAddCommentaryScreen.observe(this, Observer {
+        viewModel.showAddCommentaryScreen.observe(viewLifecycleOwner, Observer {
             navigateToAddCommentaryScreen(it.id, it.recipient.commentary)
         })
 
-        viewModel.showAddAddressScreen.observe(this, Observer {
+        viewModel.showAddAddressScreen.observe(viewLifecycleOwner, Observer {
             navigateToAddAddressScreen(it.id, it.recipient.address)
         })
 
-        viewModel.manualLoginRequired.observe(this, Observer {
+        viewModel.manualLoginRequired.observe(viewLifecycleOwner, Observer {
             navigateToLoginScreen()
         })
     }

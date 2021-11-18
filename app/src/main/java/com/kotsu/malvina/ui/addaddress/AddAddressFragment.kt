@@ -3,19 +3,21 @@ package com.kotsu.malvina.ui.addaddress
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.kotsu.malvina.R
 import com.kotsu.malvina.databinding.AddAddressFragBinding
-import com.kotsu.malvina.injection.InjectionUtils
 import com.kotsu.malvina.ui.BaseFragment
 import com.kotsu.malvina.util.Utils
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class AddAddressFragment : BaseFragment() {
 
-    private lateinit var viewModel: AddAddressViewModel
+    private val viewModel: AddAddressViewModel by viewModels()
+
     private var viewDataBinding: AddAddressFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,13 +27,11 @@ class AddAddressFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val args = AddAddressFragmentArgs.fromBundle(arguments!!)
+        val args = AddAddressFragmentArgs.fromBundle(requireArguments())
         val orderId = args.orderId
         val address = args.address
 
-        val factory = InjectionUtils.provideAddAddressViewModelFactory(requireContext().applicationContext, orderId)
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(AddAddressViewModel::class.java)
+        viewModel.start(orderId)
 
         val binding = AddAddressFragBinding.inflate(inflater, container, false)
             .apply {
@@ -67,15 +67,15 @@ class AddAddressFragment : BaseFragment() {
     }
 
     private fun subscribeUI() {
-        viewModel.manualLoginRequired.observe(this, Observer {
+        viewModel.manualLoginRequired.observe(viewLifecycleOwner, Observer {
             navigateToLoginScreen()
         })
 
-        viewModel.popUpScreen.observe(this, Observer {
+        viewModel.popUpScreen.observe(viewLifecycleOwner, Observer {
             findNavController().popBackStack()
         })
 
-        viewModel.showMessage.observe(this, Observer {
+        viewModel.showMessage.observe(viewLifecycleOwner, Observer {
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
         })
     }

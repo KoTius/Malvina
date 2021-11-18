@@ -1,5 +1,6 @@
 package com.kotsu.malvina.ui.orders
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -13,7 +14,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class OrdersViewModel(
+class OrdersViewModel @ViewModelInject constructor(
     private val getOrders: GetOrders
 ) : ViewModel() {
 

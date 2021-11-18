@@ -5,21 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
 import com.kotsu.malvina.databinding.RegistrationFragBinding
-import com.kotsu.malvina.injection.InjectionUtils
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class RegistrationFragment : Fragment() {
 
-    private lateinit var viewModel: RegistrationViewModel
+    private val viewModel: RegistrationViewModel by viewModels()
+
     private var viewDataBinding: RegistrationFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val factory = InjectionUtils.provideRegistrationViewModelFactory()
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(RegistrationViewModel::class.java)
 
         val binding = RegistrationFragBinding.inflate(inflater, container, false)
             .apply {

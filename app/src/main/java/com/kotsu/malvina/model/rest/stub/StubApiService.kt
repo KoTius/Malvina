@@ -52,18 +52,21 @@ class StubApiService {
     }
 
     fun getOrders(): Single<GetOrdersResponse> {
-
         return Single.create { emitter ->
             emitter.onSuccess(RestResponseGenerator.getOrders())
         }
     }
 
     fun completeOrder(orderId: Int): Single<CompleteOrderResponse> {
-        return Single.error(Exception("StubApiService -> Not Implemented"))
+        return Single.create { emitter ->
+            emitter.onSuccess(RestResponseGenerator.completeOrder(orderId))
+        }
     }
 
     fun cancelOrder(orderId: Int, commentary: String): Single<CancelOrderResponse> {
-        return Single.error(Exception("StubApiService -> Not Implemented"))
+        return Single.create { emitter ->
+            emitter.onSuccess(RestResponseGenerator.cancelOrder(orderId, commentary))
+        }
     }
 
     fun updateCommentaryToOrder(orderId: Int, commentary: String): Single<BaseResponse> {

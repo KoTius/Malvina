@@ -1,5 +1,6 @@
 package com.kotsu.malvina.ui.addcommentary
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,10 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class AddCommentaryViewModel(
-    private val orderId: Int,
+class AddCommentaryViewModel @ViewModelInject constructor(
     private val addCommentary: AddCommentary
 ) : ViewModel() {
+
+    private var _orderId: Int = 0
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -34,18 +36,19 @@ class AddCommentaryViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
-    init {
-    }
-
     override fun onCleared() {
         compositeDisposable.dispose()
+    }
+
+    fun start(orderId: Int) {
+        this._orderId = orderId
     }
 
     fun addCommentary(commentary: String) {
 
         _isLoading.value = true
 
-        val disposable = addCommentary.run(orderId, commentary)
+        val disposable = addCommentary.run(_orderId, commentary)
             .doAfterTerminate {
                 _isLoading.value = false
             }

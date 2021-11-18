@@ -7,25 +7,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.kotsu.malvina.R
 import com.kotsu.malvina.databinding.LoginFragBinding
-import com.kotsu.malvina.injection.InjectionUtils
 import com.kotsu.malvina.util.Utils
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels()
     private var viewDataBinding: LoginFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val factory = InjectionUtils.provideLoginViewModelFactory(requireContext().applicationContext)
-        viewModel = ViewModelProviders.of(this, factory)
-            .get(LoginViewModel::class.java)
 
         val binding = LoginFragBinding.inflate(inflater, container, false)
             .apply {
@@ -33,17 +30,19 @@ class LoginFragment : Fragment() {
                 this.viewModel = this@LoginFragment.viewModel
             }
 
-
-        binding.signIn.setOnClickListener {
-            Utils.hideKeyboard(it)
-            attemptSignIn()
-        }
-
         viewDataBinding = binding
 
         subscribeUI()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        viewDataBinding!!.signIn.setOnClickListener {
+            Utils.hideKeyboard(it)
+            attemptSignIn()
+        }
     }
 
     override fun onDestroyView() {
@@ -53,11 +52,11 @@ class LoginFragment : Fragment() {
 
     private fun subscribeUI() {
 
-        viewModel.popFromBackStack.observe(this, Observer {
+        viewModel.popFromBackStack.observe(viewLifecycleOwner, Observer {
             activity?.finish()
         })
 
-        viewModel.showMessage.observe(this, Observer {
+        viewModel.showMessage.observe(viewLifecycleOwner, Observer {
             showToast(it)
         })
     }

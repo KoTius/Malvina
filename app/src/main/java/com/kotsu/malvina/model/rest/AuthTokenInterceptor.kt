@@ -1,9 +1,10 @@
 package com.kotsu.malvina.model.rest
 
+import android.content.Context
 import com.kotsu.malvina.model.data.account.source.AccountDataSource
-import com.kotsu.malvina.model.rest.exception.AccountDataSourceNotProvidedException
 import com.kotsu.malvina.model.rest.exception.ManualLoginRequiredException
 import com.kotsu.malvina.ui.login.domain.classes.LoginSuccess
+import dagger.hilt.android.EntryPointAccessors
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -16,14 +17,23 @@ import okhttp3.Response
  * 2.2 If login request successful fetches new token from login response and provides it to accountRepository
  * 2.3 Adds new token to original request and proceeds it again
  *
- * @throws AccountDataSourceNotProvidedException if accountRepository is not provided
  * @throws ManualLoginRequiredException if token refreshing failed
+ *
+ * @param appContext Context required for Hilt's EntryPoint so we can get AccountRepository instance which
+ * is not possible at instance creation because of circular dependency:
+ * AccountRepository required for AuthTokenInterceptor, AuthTokenInterceptor required for RetrofitHelper,
+ * RetrofitHelper required for AccountRepository
  *
  * @return server response on original request
  */
-class AuthTokenInterceptor : Interceptor {
+class AuthTokenInterceptor(
+    private val appContext: Context
+) : Interceptor {
 
-    var accountRepository: AccountDataSource? = null
+    interface AuthTokenInterceptorEntryPoint {
+
+        fun accountRepository(): AccountDataSource
+    }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         return performRequestWithAuthChecks(chain)
@@ -40,11 +50,7 @@ class AuthTokenInterceptor : Interceptor {
             return chain.proceed(originalRequest)
         }
 
-        if (accountRepository == null) {
-            throw AccountDataSourceNotProvidedException("You must provide account data source to fetching auth token")
-        }
-
-        val account = accountRepository!!.getAccount()
+        val account = getAccountRepository().getAccount()
 
         if (account?.authToken == null) {
             throw ManualLoginRequiredException("Account or auth token is null")
@@ -57,9 +63,9 @@ class AuthTokenInterceptor : Interceptor {
         val isAuthTokenRefreshRequired = response.code() == AUTHORIZATION_ERROR_RESPONSE_CODE
 
         if (isAuthTokenRefreshRequired) {
-            accountRepository!!.invalidateAuthToken()
+            getAccountRepository().invalidateAuthToken()
             // auto login for token refresh.
-            val loginResult = accountRepository!!.logIn(account.login, account.password)
+            val loginResult = getAccountRepository().logIn(account.login, account.password)
 
             if (loginResult is LoginSuccess) {
                 val newAuthToken = loginResult.authToken
@@ -83,7 +89,12 @@ class AuthTokenInterceptor : Interceptor {
             .build()
     }
 
+    private fun getAccountRepository(): AccountDataSource {
+        val hiltEntry = EntryPointAccessors.fromApplication(appContext, AuthTokenInterceptorEntryPoint::class.java)
+        return hiltEntry.accountRepository()
+    }
+
     companion object {
-        private val AUTHORIZATION_ERROR_RESPONSE_CODE = 401
+        private const val AUTHORIZATION_ERROR_RESPONSE_CODE = 401
     }
 }

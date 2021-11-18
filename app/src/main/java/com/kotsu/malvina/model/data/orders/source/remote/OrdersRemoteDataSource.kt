@@ -12,7 +12,7 @@ import java.io.IOException
 import java.lang.UnsupportedOperationException
 
 
-class OrdersRemoteDataSource private constructor(
+class OrdersRemoteDataSource(
     private val apiService: StubApiService
 ) : OrdersDataSource {
 
@@ -30,7 +30,7 @@ class OrdersRemoteDataSource private constructor(
     }
 
     override fun getOrder(orderId: Int): Single<Order> {
-        return Single.error(NotImplementedError("Can't find order"))
+        return Single.error(NotImplementedError("Can't find order with id:$orderId"))
     }
 
     override fun completeOrder(orderId: Int): Completable {
@@ -55,19 +55,5 @@ class OrdersRemoteDataSource private constructor(
 
     override fun saveOrders(orders: List<Order>) {
         throw UnsupportedOperationException()
-    }
-
-    companion object {
-
-        private var INSTANCE: OrdersRemoteDataSource? = null
-
-        @JvmStatic
-        fun getInstance(apiService: StubApiService) =
-            INSTANCE ?: synchronized(OrdersRemoteDataSource::class.java) {
-                INSTANCE ?: OrdersRemoteDataSource(apiService)
-                    .also {
-                        INSTANCE = it
-                    }
-            }
     }
 }

@@ -14,7 +14,7 @@ import io.reactivex.Single
 import java.lang.Exception
 
 
-class AccountRemoteDataSource private constructor(
+class AccountRemoteDataSource (
     private val apiService: StubApiService
 ) : AccountDataSource {
 
@@ -87,19 +87,5 @@ class AccountRemoteDataSource private constructor(
 
     private fun log(text: String) {
         Utils.log("AccountRemote -> $text")
-    }
-
-    companion object {
-
-        private var INSTANCE: AccountRemoteDataSource? = null
-
-        @JvmStatic
-        fun getInstance(apiService: StubApiService) =
-            INSTANCE ?: synchronized(AccountRemoteDataSource::class.java) {
-                INSTANCE ?: AccountRemoteDataSource(apiService)
-                    .also {
-                        INSTANCE = it
-                    }
-            }
     }
 }

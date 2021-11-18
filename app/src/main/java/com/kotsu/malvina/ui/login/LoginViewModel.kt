@@ -1,5 +1,6 @@
 package com.kotsu.malvina.ui.login
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class LoginViewModel(
+class LoginViewModel @ViewModelInject constructor(
     private val logIn: LogIn
 ) : ViewModel() {
 

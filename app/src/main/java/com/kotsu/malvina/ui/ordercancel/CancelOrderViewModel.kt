@@ -1,5 +1,6 @@
 package com.kotsu.malvina.ui.ordercancel
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,10 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class CancelOrderViewModel(
-    private val orderId: Int,
+class CancelOrderViewModel @ViewModelInject constructor(
     private val cancelOrder: CancelOrder
 ) : ViewModel() {
+
+    private var _orderId: Int = 0
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -38,11 +40,15 @@ class CancelOrderViewModel(
         compositeDisposable.dispose()
     }
 
+    fun start(orderId: Int) {
+        this._orderId = orderId
+    }
+
     fun cancelOrder(commentary: String) {
 
         _isLoading.value = true
 
-        val disposable = cancelOrder.run(orderId, commentary)
+        val disposable = cancelOrder.run(_orderId, commentary)
             .doAfterTerminate {
                 _isLoading.value = false
             }
