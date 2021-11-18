@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kotsu.malvina.R
 import com.kotsu.malvina.databinding.StorageFragBinding
@@ -20,11 +19,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class StorageFragment : BaseFragment() {
 
     private val viewModel: StorageViewModel by viewModels()
-    private lateinit var viewDataBinding: StorageFragBinding
+
+    private var viewDataBinding: StorageFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        viewDataBinding = StorageFragBinding.inflate(inflater, container, false)
+        val binding = StorageFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@StorageFragment.viewModel
                 lifecycleOwner = this@StorageFragment
@@ -51,23 +51,31 @@ class StorageFragment : BaseFragment() {
                 }
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
+    }
+
 
     private fun subscribeUI() {
 
-        viewModel.showLoading.observe(viewLifecycleOwner, Observer {
-            viewDataBinding.refreshLayout.isRefreshing = it
-        })
+        viewModel.showLoading.observe(viewLifecycleOwner) {
+            viewDataBinding!!.refreshLayout.isRefreshing = it
+        }
 
-        viewModel.showLoadingError.observe(viewLifecycleOwner, Observer {
+        viewModel.showLoadingError.observe(viewLifecycleOwner) {
             Toast.makeText(context, getString(it), Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        viewModel.manualLoginRequired.observe(viewLifecycleOwner, Observer {
+        viewModel.manualLoginRequired.observe(viewLifecycleOwner) {
             navigateToLoginScreen()
-        })
+        }
     }
 }

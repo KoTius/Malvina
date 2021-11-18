@@ -16,11 +16,13 @@
 
         <activity
             android:name="com.kotsu.malvina.ui.LoginActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dark"/>
 
         <activity
             android:name="com.kotsu.malvina.ui.MainActivity"
+            android:exported="true"
             android:screenOrientation="portrait">
 
             <intent-filter>

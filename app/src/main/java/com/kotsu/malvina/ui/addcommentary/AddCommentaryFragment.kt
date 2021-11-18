@@ -17,7 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class AddCommentaryFragment : BaseFragment() {
 
     private val viewModel: AddCommentaryViewModel by viewModels()
-    private lateinit var viewDataBinding: AddCommentaryFragBinding
+
+    private var viewDataBinding: AddCommentaryFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,7 @@ class AddCommentaryFragment : BaseFragment() {
 
         viewModel.start(orderId)
 
-        viewDataBinding = AddCommentaryFragBinding.inflate(inflater, container, false)
+        val binding = AddCommentaryFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@AddCommentaryFragment.viewModel
                 lifecycleOwner = this@AddCommentaryFragment
@@ -40,9 +41,16 @@ class AddCommentaryFragment : BaseFragment() {
                 commentaryInput.setText(commentary)
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -74,8 +82,10 @@ class AddCommentaryFragment : BaseFragment() {
     }
 
     private fun confirmAdding() {
-        Utils.hideKeyboard(viewDataBinding.commentaryInput)
-        val commentary = viewDataBinding.commentaryInput.text.toString()
-        viewModel.addCommentary(commentary)
+        viewDataBinding?.let { binding ->
+            Utils.hideKeyboard(binding.commentaryInput)
+            val commentary = binding.commentaryInput.text.toString()
+            viewModel.addCommentary(commentary)
+        }
     }
 }

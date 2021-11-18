@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sandbox_graph"
+    app:startDestination="@id/sandbox_main_frag">
+
+    <fragment
+        android:id="@+id/sandbox_main_frag"
+        android:name="com.kotsu.malvina.sandbox.ui.SandboxMainFragment"
+        android:label="@string/sandbox"
+        tools:layout="@layout/frag_sandbox_main">
+
+        <action
+            android:id="@+id/action_to_pick_image"
+            app:destination="@id/pick_image_frag" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/pick_image_frag"
+        android:name="com.kotsu.malvina.sandbox.ui.pickimage.PickImageWithoutPermissionsFragment"
+        tools:layout="@layout/frag_sandbox_pick_image" />
+
+</navigation>

@@ -14,15 +14,36 @@ import dagger.hilt.android.AndroidEntryPoint
 class RegistrationFragment : Fragment() {
 
     private val viewModel: RegistrationViewModel by viewModels()
-    private lateinit var viewDataBinding: RegistrationFragBinding
+
+    private var viewDataBinding: RegistrationFragBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        viewDataBinding = RegistrationFragBinding.inflate(inflater, container, false)
+        val binding = RegistrationFragBinding.inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = this@RegistrationFragment
             }
 
-        return viewDataBinding.root
+        viewDataBinding = binding
+
+        testNavigation()
+
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
+    }
+
+    private fun testNavigation() {
+        viewDataBinding!!.toMainActBtn.setOnClickListener {
+            navigateToMain()
+        }
+    }
+
+    private fun navigateToMain() {
+//        findNavController().navigate(R.id.action_registration_to_main_act)
+//        activity?.finish()
     }
 }

@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@id/sandbox_graph"
+        android:icon="@drawable/ic_baseline_explore_24dp"
+        android:title="@string/sandbox" />
+
     <item
         android:id="@id/orders_nav_graph"
         android:icon="@drawable/ic_directions_run_black_24dp"
         android:title="@string/orders" />
+
     <item
         android:id="@id/storage_graph"
         android:icon="@drawable/ic_work_black_24dp"

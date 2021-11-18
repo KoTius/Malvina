@@ -17,7 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class AddAddressFragment : BaseFragment() {
 
     private val viewModel: AddAddressViewModel by viewModels()
-    private lateinit var viewDataBinding: AddAddressFragBinding
+
+    private var viewDataBinding: AddAddressFragBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,7 @@ class AddAddressFragment : BaseFragment() {
 
         viewModel.start(orderId)
 
-        viewDataBinding = AddAddressFragBinding.inflate(inflater, container, false)
+        val binding = AddAddressFragBinding.inflate(inflater, container, false)
             .apply {
                 viewModel = this@AddAddressFragment.viewModel
                 lifecycleOwner = this@AddAddressFragment
@@ -40,9 +41,16 @@ class AddAddressFragment : BaseFragment() {
                 commentaryInput.setText(address)
             }
 
+        viewDataBinding = binding
+
         subscribeUI()
 
-        return viewDataBinding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewDataBinding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -73,8 +81,10 @@ class AddAddressFragment : BaseFragment() {
     }
 
     private fun confirmAdding() {
-        Utils.hideKeyboard(viewDataBinding.commentaryInput)
-        val address = viewDataBinding.commentaryInput.text.toString()
-        viewModel.addAddress(address)
+        viewDataBinding?.let { binding ->
+            Utils.hideKeyboard(binding.commentaryInput)
+            val address = binding.commentaryInput.text.toString()
+            viewModel.addAddress(address)
+        }
     }
 }

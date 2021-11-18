@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="product_cards_spacing">8dp</dimen>
+
+    <dimen name="margin_start_default">8dp</dimen>
+    <dimen name="margin_end_default">8dp</dimen>
 </resources>

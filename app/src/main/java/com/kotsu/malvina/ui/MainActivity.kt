@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -23,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+
     private lateinit var viewDataBinding: MainActBinding
 
     private var currentNavController: LiveData<NavController>? = null
@@ -37,8 +37,41 @@ class MainActivity : AppCompatActivity() {
         setupBottomNavAndToolbar()
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        log("onRestart")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        log("onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        log("onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        log("onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        log("onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        log("onDestroy")
+    }
+
+    // TODO: As of 2.3.0 navigation version which is outdated
+    // There was navigation library update with back stack support included so this setupWithNavController
+    // should be removed
     private fun setupBottomNavAndToolbar() {
-        val navGraphIds = listOf(R.navigation.orders_nav_graph, R.navigation.storage_graph)
+        val navGraphIds = listOf(R.navigation.sandbox_graph, R.navigation.orders_nav_graph, R.navigation.storage_graph)
 
         val controller = viewDataBinding.mainBottomNavView.setupWithNavController(
             navGraphIds = navGraphIds,
@@ -48,8 +81,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Whenever the selected controller changes, setup the action bar.
-        controller.observe(this, Observer { navController ->
-            setupActionBar(navController)
+        controller.observe(this, {
+            setupActionBar(it)
         })
 
         currentNavController = controller
@@ -58,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupActionBar(navController: NavController) {
         invalidateOptionsMenu()
 
-        val appBarConfig = AppBarConfiguration.Builder(R.id.orders_frag, R.id.storage_frag)
+        val appBarConfig = AppBarConfiguration.Builder(R.id.sandbox_main_frag, R.id.orders_frag, R.id.storage_frag)
             .build()
 
         NavigationUI.setupWithNavController(

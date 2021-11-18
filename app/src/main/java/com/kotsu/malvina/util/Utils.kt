@@ -1,11 +1,13 @@
 package com.kotsu.malvina.util
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.kotsu.malvina.BuildConfig
 import com.kotsu.malvina.R
+import java.io.IOException
 import java.text.NumberFormat
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
@@ -54,4 +56,12 @@ object Utils {
             Log.d("debugLogs", text)
         }
     }
+
+    @Throws(IOException::class)
+    fun readBytes(context: Context, uri: Uri): ByteArray? =
+        context.contentResolver.openInputStream(uri)
+            ?.buffered()
+            ?.use {
+                it.readBytes()
+            }
 }
