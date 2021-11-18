@@ -10,7 +10,7 @@ buildscript {
         cardViewVersion = '1.0.0'
         lifecycleVersion = '2.2.0'
         navigationVersion = '2.3.0'
-        roomVersion = '2.1.0-alpha06'
+        roomVersion = '2.4.0-beta02'
         rxJavaVersion = '2.2.6'
         rxAndroidVersion = '2.1.0'
         rxKotlinVersion = '2.2.0'
