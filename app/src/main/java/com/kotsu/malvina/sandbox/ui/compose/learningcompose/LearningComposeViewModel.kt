@@ -32,7 +32,7 @@ data class Message(
 
 object SampleData {
 
-    // Sample conversation data
+    // Sample conversation datav
     val conversationSample = listOf(
         Message(
             "Colleague",

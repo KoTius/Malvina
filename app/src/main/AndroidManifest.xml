@@ -34,5 +34,10 @@
 
         </activity>
 
+        <activity
+            android:name=".sandbox.ui.compose.LearningComposeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MalvinaTheme" />
+
     </application>
 </manifest>
