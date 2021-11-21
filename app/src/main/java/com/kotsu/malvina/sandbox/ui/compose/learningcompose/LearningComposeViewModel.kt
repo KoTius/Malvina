@@ -1,4 +1,4 @@
-package com.kotsu.malvina.sandbox.ui.learningcompose
+package com.kotsu.malvina.sandbox.ui.compose.learningcompose
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -31,6 +31,7 @@ data class Message(
 )
 
 object SampleData {
+
     // Sample conversation data
     val conversationSample = listOf(
         Message(

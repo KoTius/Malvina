@@ -27,6 +27,6 @@
 
     <fragment
         android:id="@+id/learning_compose_frag"
-        android:name="com.kotsu.malvina.sandbox.ui.learningcompose.LearningComposeFragment" />
+        android:name="com.kotsu.malvina.sandbox.ui.compose.learningcompose.LearningComposeFragment" />
 
 </navigation>

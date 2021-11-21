@@ -2,7 +2,7 @@
  * This not needed if we use Mdc from the compose-theme-adapter dependency
  */
 
-package com.kotsu.malvina.ui.theme
+package com.kotsu.malvina.sandbox.ui.compose.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

@@ -1,4 +1,4 @@
-package com.kotsu.malvina.sandbox.ui.learningcompose
+package com.kotsu.malvina.sandbox.ui.compose.learningcompose
 
 import android.content.res.Configuration
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.kotsu.malvina.ui.theme
+package com.kotsu.malvina.sandbox.ui.compose.theme
 
 import androidx.compose.ui.graphics.Color
 
