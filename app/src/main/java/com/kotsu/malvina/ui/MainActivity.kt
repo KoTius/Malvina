@@ -4,14 +4,14 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.kotsu.malvina.R
 import com.kotsu.malvina.databinding.MainActBinding
 import com.kotsu.malvina.util.Utils
-import com.kotsu.malvina.util.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewDataBinding: MainActBinding
 
-    private var currentNavController: LiveData<NavController>? = null
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,38 +67,51 @@ class MainActivity : AppCompatActivity() {
         log("onDestroy")
     }
 
-    // TODO: As of 2.3.0 navigation version which is outdated
-    // There was navigation library update with back stack support included so this setupWithNavController
-    // should be removed
+    /**
+     * Known issues:
+     * - Reselecting of a bottom nav doesn't navigate to the root of the selected graph
+     *
+     * - Setup with action bar weird: title not always correct and appBarConfig requires ids of the
+     *   concrete start destinations instead of the graphs..
+     *   I don't like having one toolbar for whole app anyway. Every fragment should have it's own
+     *   toolbar and manage its back button behavior manually. That will be much robust than this.
+     *   Also this requires to have labels for every destination fragment in nav graphs,
+     *   otherwise wrong title will be displayed for non-labeled destination after navigation
+     *   between bottom graphs
+     *
+     *   This navigation library doomed honestly.
+     */
+    // TODO: Add support for reselecting bottom nav graphs
     private fun setupBottomNavAndToolbar() {
-        val navGraphIds = listOf(R.navigation.sandbox_graph, R.navigation.orders_nav_graph, R.navigation.storage_graph)
 
-        val controller = viewDataBinding.mainBottomNavView.setupWithNavController(
-            navGraphIds = navGraphIds,
-            fragmentManager = supportFragmentManager,
-            containerId = R.id.nav_host_fragment,
-            intent = intent
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.nav_host_fragment
+        ) as NavHostFragment
+
+        navController = navHostFragment.navController
+
+        viewDataBinding.mainBottomNavView.setupWithNavController(navController)
+
+        viewDataBinding.mainBottomNavView.setOnItemReselectedListener { item ->
+            log("BottomNav reselected:${item.title}")
+            // TODO:
+            // pop backstack of the selected graph to start destination
+            // Also would be good before popping the backstack to scroll content to top if
+            // it is scrolled.
+            // Why it doesn't work out of the box?
+        }
+
+        val appBarConfiguration = AppBarConfiguration(
+            // Top level destinations. This doesn't work with a toolbar if used nav graphs ids instead
+            // of the destination ids
+            setOf(R.id.sandbox_main_frag, R.id.orders_frag, R.id.storage_frag)
         )
 
-        // Whenever the selected controller changes, setup the action bar.
-        controller.observe(this, {
-            setupActionBar(it)
-        })
-
-        currentNavController = controller
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
-    private fun setupActionBar(navController: NavController) {
-        invalidateOptionsMenu()
-
-        val appBarConfig = AppBarConfiguration.Builder(R.id.sandbox_main_frag, R.id.orders_frag, R.id.storage_frag)
-            .build()
-
-        NavigationUI.setupWithNavController(
-            viewDataBinding.toolbar,
-            navController,
-            appBarConfig
-        )
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
     }
 
     private fun log(text: String) {

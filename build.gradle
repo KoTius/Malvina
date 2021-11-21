@@ -3,13 +3,16 @@
 buildscript {
 
     ext {
-        kotlinVersion = '1.6.0'
-        appCompatVersion = '1.2.0'
-        ktxActivityVersion = '1.1.0'
+        // version (1.0.5) of the Compose Compiler requires Kotlin version 1.5.31 so will wait with 1.6 kotlin for a bit
+        kotlinVersion = '1.5.31'
+        coreVersion = '1.7.0'
+        composeVersion = '1.0.5'
+        appCompatVersion = '1.4.0'
+        ktxActivityVersion = '1.4.0'
         constraintLayoutVersion = '2.0.0-beta6'
         cardViewVersion = '1.0.0'
         lifecycleVersion = '2.2.0'
-        navigationVersion = '2.3.0'
+        navigationVersion = '2.4.0-beta02'
         roomVersion = '2.4.0-beta02'
         rxJavaVersion = '2.2.6'
         rxAndroidVersion = '2.1.0'

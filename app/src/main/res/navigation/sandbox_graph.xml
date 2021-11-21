@@ -14,11 +14,20 @@
         <action
             android:id="@+id/action_to_pick_image"
             app:destination="@id/pick_image_frag" />
+
+        <action
+            android:id="@+id/action_to_learning_compose"
+            app:destination="@id/learning_compose_frag" />
     </fragment>
 
     <fragment
         android:id="@+id/pick_image_frag"
         android:name="com.kotsu.malvina.sandbox.ui.pickimage.PickImageWithoutPermissionsFragment"
         tools:layout="@layout/frag_sandbox_pick_image" />
+
+    <fragment
+        android:id="@+id/learning_compose_frag"
+        android:name="com.kotsu.malvina.sandbox.ui.compose.learningcompose.LearningComposeFragment"
+        android:label="@string/learning_compose" />
 
 </navigation>

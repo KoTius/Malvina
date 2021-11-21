@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.kotsu.malvina.databinding.FragSandboxMainBinding
 import com.kotsu.malvina.ui.BaseFragment
+import com.kotsu.malvina.util.extensions.navigateSafe
 
 
 /**
@@ -32,11 +34,26 @@ class SandboxMainFragment : BaseFragment() {
         binding.pickImage.setOnClickListener {
             navigateToPickImageFragment()
         }
+
+        binding.learningCompose.setOnClickListener {
+            navigateToLearningComposeFragment()
+        }
+    }
+
+    private fun navigate(directions: NavDirections) {
+        findNavController()
+            .navigateSafe(directions)
     }
 
     private fun navigateToPickImageFragment() {
-        findNavController().navigate(
+        navigate(
             SandboxMainFragmentDirections.actionToPickImage()
+        )
+    }
+
+    private fun navigateToLearningComposeFragment() {
+        navigate(
+            SandboxMainFragmentDirections.actionToLearningCompose()
         )
     }
 }
