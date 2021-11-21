@@ -59,4 +59,5 @@
     <string name="hours">ч.</string>
     <string name="pick_image">Pick Image</string>
     <string name="sandbox">Sandbox</string>
+    <string name="learning_compose">Learning compose</string>
 </resources>

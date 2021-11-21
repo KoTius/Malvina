@@ -20,5 +20,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:text="@string/pick_image" />
 
+        <Button
+            android:id="@+id/learning_compose"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@id/pick_image"
+            app:layout_constraintTop_toBottomOf="@id/pick_image"
+            app:layout_constraintEnd_toEndOf="@id/pick_image"
+            android:text="@string/learning_compose" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -11,19 +11,20 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.MalvinaTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
             android:name="com.kotsu.malvina.ui.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dark"/>
+            android:theme="@style/Theme.MalvinaTheme.Dark"/>
 
         <activity
             android:name="com.kotsu.malvina.ui.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MalvinaTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
